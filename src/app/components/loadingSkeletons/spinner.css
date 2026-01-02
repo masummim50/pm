@@ -1,0 +1,16 @@
+.spinner {
+    display: inline-block;
+    border: 5px solid #f3f3f3; /* Light gray border */
+    border-top: 5px solid #3498db; /* Blue border */
+    border-radius: 50%; /* Make it round */
+    animation: spin 1s linear infinite; /* Spin continuously */
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
