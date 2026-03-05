@@ -2,8 +2,6 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
@@ -19,18 +17,19 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { Tooltip } from "@mui/material";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Avatar from "@mui/material/Avatar";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { removeUser } from "../redux/features/user/userSlice";
 import { red, blueGrey } from "@mui/material/colors";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useLazyGetTodosQuery } from "../redux/features/todo/todo.api";
 import { useLazyGetPersonalProjectsQuery, useLazyGetTeamProjectsQuery } from "../redux/features/project/project.api";
+import {
+  Shield,
+  User as UserIcon,
+  LogOut
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 // import ContactPageIcon from '@mui/icons-material/ContactPage';
 const drawerWidth = 240;
 const openWidth = 1000;
@@ -64,27 +63,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -104,15 +83,15 @@ const Drawer = styled(MuiDrawer, {
 }));
 const links = [
   // { title: "Testing", url: "/test", icon: <PersonIcon /> },
-  { title: "Profile", url: "/dashboard", icon: <PersonIcon /> },
-  { title: "Todos", url: "/todos", icon: <FormatListBulletedIcon /> },
+  { title: "Profile", url: "/dashboard/profile", icon: <PersonIcon /> },
+  { title: "Todos", url: "/dashboard/todos", icon: <FormatListBulletedIcon /> },
   {
     title: "Personal Projects",
-    url: "/personalprojects",
+    url: "/dashboard/personalprojects",
     icon: <AccountTreeIcon />,
   },
-  { title: "Team Projects", url: "/teamprojects", icon: <GroupsIcon /> },
-  { title: "Journal", url: "/journal", icon: <MenuBookIcon /> },
+  { title: "Team Projects", url: "/dashboard/teamprojects", icon: <GroupsIcon /> },
+  { title: "Journal", url: "/dashboard/journal", icon: <MenuBookIcon /> },
   {
     title: "Log Out",
     url: "/",
@@ -121,7 +100,7 @@ const links = [
   },
 ];
 
-const settings = ["LogOut"];
+// const settings = ["LogOut"];
 
 export default function OtherLayout() {
 
@@ -184,78 +163,82 @@ export default function OtherLayout() {
     <Box
       sx={{
         display: "flex",
-        //  background: blueGrey[900],
         minHeight: "100vh",
+        bgcolor: 'transparent'
       }}
     >
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          // background: blueGrey[800],
-        }}
-      >
-        <Toolbar>
-          <Container
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div className="logo">
-              <img src="/logo.png" style={{ height: "50px" }} alt="" />
+
+      {/* Redesigned Header */}
+      <header className="fixed top-0 right-0 left-0 h-16 bg-neutral-950/70 backdrop-blur-xl border-b border-neutral-800/50 flex items-center px-6 z-[1300] transition-all">
+        <div className="w-full flex justify-between items-center">
+          {/* Logo Section */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <Shield className="w-5 h-5 text-white" />
             </div>
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip
-                title={
-                  <p>
-                    {user?.name} <br /> {user?.email}
-                  </p>
-                }
-              >
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt={user?.name || "u"}
-                    src="/static/images/avatar/2.jpg"
+            <span className="text-xl font-bold tracking-tight text-white">Chronova</span>
+          </Link>
+
+          {/* Profile Section */}
+          <div className="relative">
+            <button
+              onClick={handleOpenUserMenu}
+              className="flex items-center gap-2 p-1 rounded-full hover:bg-neutral-800/50 transition-colors border border-transparent hover:border-neutral-700/50 group"
+            >
+              <div className="w-9 h-9 rounded-full bg-neutral-800 flex items-center justify-center border border-neutral-700 overflow-hidden group-hover:border-blue-500/50 transition-all">
+                <UserIcon className="w-5 h-5 text-neutral-400 group-hover:text-blue-400" />
+              </div>
+            </button>
+
+            <AnimatePresence>
+              {Boolean(anchorElUser) && (
+                <>
+                  {/* Backdrop for closing */}
+                  <div
+                    className="fixed inset-0 z-40 bg-transparent"
+                    onClick={handleCloseUserMenu}
                   />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    {/* <Typography textAlign="center">{setting}</Typography> */}
-                    <Button onClick={handleLogout}>Log Out</Button>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Container>
-        </Toolbar>
-      </AppBar>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="absolute right-0 mt-3 w-64 bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl p-2 z-50 overflow-hidden"
+                  >
+                    <div className="px-4 py-3 border-b border-neutral-800 mb-2">
+                      <p className="text-sm font-bold text-white truncate">{user?.name}</p>
+                      <p className="text-xs text-neutral-500 truncate">{user?.email}</p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        handleCloseUserMenu();
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-400 hover:bg-red-500/10 rounded-xl transition-colors group text-left"
+                    >
+                      <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      Sign Out
+                    </button>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </header>
       <Drawer
         variant="permanent"
         open={open}
         sx={{
           height: "100vh",
-          border: "none",
-          // "& .MuiDrawer-paper": { borderWidth: 0 },
+          "& .MuiDrawer-paper": {
+            border: "none",
+            bgcolor: 'neutral.950',
+            borderRight: '1px solid rgba(255,255,255,0.05)',
+            boxShadow: 'none'
+          },
         }}
       >
         <DrawerHeader>
@@ -276,14 +259,14 @@ export default function OtherLayout() {
             // padding: "5px 5px",
             flexDirection: "column",
             gap: 1,
-
+            px: 1,
           }}
         >
           {links.map((link, index) => (
             <Link
               onMouseEnter={() => {
                 link.title === 'Todos' ? triggerQuery(undefined, true) : link.title === 'Personal Projects' ? triggerPersonalProjectQuery(undefined, true) : link.title === 'Team Projects' ? triggerTeamProjectQuery(undefined, true) : console.log('hovered hover nothing')
-            }}
+              }}
               onClick={() => {
                 link.logout ? handleLogout() : null;
               }}
@@ -299,9 +282,19 @@ export default function OtherLayout() {
                 disablePadding
                 sx={{
                   display: "block",
-                  transition: "all ease in out",
-                  transitionDuration: "300ms",
-                  borderRadius: "5px",
+                  transition: "all 300ms ease-in-out",
+                  borderRadius: "12px",
+                  mb: 0.5,
+                  "&.Mui-selected": {
+                    bgcolor: 'rgba(59, 130, 246, 0.1) !important',
+                    color: '#60a5fa !important',
+                    "& .MuiListItemIcon-root": {
+                      color: '#60a5fa',
+                    }
+                  },
+                  "&:hover": {
+                    bgcolor: 'rgba(255, 255, 255, 0.03)',
+                  }
                 }}
               >
                 <ListItemButton

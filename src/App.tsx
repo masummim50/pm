@@ -1,8 +1,9 @@
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import SignUp from "./app/components/SignUp";
-import Login from "./app/components/Login";
-import Profile from "./app/components/Profile";
+import LandingPage from "./app/components/LandingPage";
+import SignUp from "./app/components/auth/SignUpTailwind";
+import Login from "./app/components/auth/LoginTailwind";
+import Profile from "./app/components/profile/ProfileTailwind";
 import OtherLayout from "./app/components/OtherLayout";
 import PrivateRoute from "./PrivateRoute";
 import { jwtDecode } from "jwt-decode";
@@ -23,45 +24,49 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
+      element: <LandingPage />,
+    },
+    {
+      path: "/dashboard",
       element: (
         <PrivateRoute>
           <OtherLayout />
         </PrivateRoute>
       ),
       children: [
-        { path: "/", element: <Home /> },
-        { path: "/test", element: <TestingPage /> },
-        { path: "/dashboard", element: <Profile /> },
-        { path: "/todos", element: <Todos /> },
+        { path: "", element: <Home /> },
+        { path: "test", element: <TestingPage /> },
+        { path: "profile", element: <Profile /> },
+        { path: "todos", element: <Todos /> },
         {
-          path: "/personalprojects",
+          path: "personalprojects",
           element: <Projects />,
           children: [
-            { path: "/personalprojects", element: <PersonalProjectHome /> },
+            { path: "", element: <PersonalProjectHome /> },
             {
-              path: "/personalprojects/createnew",
+              path: "createnew",
               element: <CreateProject />,
             },
-            { path: "/personalprojects/:id", element: <ProjectDetailsTab /> },
+            { path: ":id", element: <ProjectDetailsTab /> },
           ],
         },
         {
-          path: "/teamprojects",
+          path: "teamprojects",
           element: <Projects />,
           children: [
-            { path: "/teamprojects", element: <TeamProjectHome /> },
+            { path: "", element: <TeamProjectHome /> },
             {
-              path: "/teamprojects/createnew",
+              path: "createnew",
               element: <CreateProject />,
             },
-            { path: "/teamprojects/:id", element: <ProjectDetailsTab /> },
+            { path: ":id", element: <ProjectDetailsTab /> },
           ],
         },
         {
-          path:'/journal',
-          element: <Journal/>,
-          children:[
-            {path:'/journal', element:<JournalHome/>}
+          path: "journal",
+          element: <Journal />,
+          children: [
+            { path: "", element: <JournalHome /> }
           ]
         }
       ],
@@ -80,17 +85,16 @@ function App() {
   const token = localStorage.getItem("project-m-token");
   if (token) {
     const present = new Date().getTime() / 1000;
-    const decoded: {_id:string, name: string; email: string; exp: number; iat: number } =
+    const decoded: { _id: string, name: string; email: string; exp: number; iat: number } =
       jwtDecode(token);
     if (decoded?.exp > present) {
       dispatch(
-        setUser({id:decoded?._id, name: decoded?.name, email: decoded?.email, token: token })
+        setUser({ id: decoded?._id, name: decoded?.name, email: decoded?.email, token: token })
       );
     }
   }
   return (
     <>
-
       <RouterProvider router={router} />
     </>
   );
