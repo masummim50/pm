@@ -4,7 +4,7 @@ import LandingPage from "./app/components/LandingPage";
 import SignUp from "./app/components/auth/SignUpTailwind";
 import Login from "./app/components/auth/LoginTailwind";
 import Profile from "./app/components/profile/ProfileTailwind";
-import OtherLayout from "./app/components/OtherLayout";
+import OtherLayout from "./app/components/OtherLayoutTailwind";
 import PrivateRoute from "./PrivateRoute";
 import { jwtDecode } from "jwt-decode";
 import { setUser } from "./app/redux/features/user/userSlice";

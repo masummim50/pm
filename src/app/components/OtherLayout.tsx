@@ -338,24 +338,21 @@ export default function OtherLayout() {
           ))}
         </List>
 
-        {/* {
-  open ? 
-  <a style={{textDecoration:'none', textAlign:'center', color:'lime', backgroundColor:blueGrey[700], padding:'10px 0', display:'flex', alignItems:'center', justifyContent:'center'}} href="https://masum-dev.vercel.app/contact" target="_blank"><ContactPageIcon/>Contact Developer</a> :
-  <Tooltip title="Contact Developer" placement="right">
-    <a style={{textDecoration:'none', textAlign:'center', color:'lime', backgroundColor:blueGrey[700],  padding:'10px 0', display:'flex', alignItems:'center', justifyContent:'center'}} href="https://masum-dev.vercel.app/contact" target="_blank"><ContactPageIcon/></a>
-  </Tooltip>
-} */}
+
       </Drawer>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          padding: "10px 10px 60px 10px",
-          margin: "65px 5px 0",
+          padding: "10px 0px 0px 10px",
+          margin: "50px 0px 0px 0px",
           borderRadius: "5px",
         }}
       >
-        <Outlet />
+        <div className="bg-neutral-950 p-6 min-h-[calc(100vh+100px)]">
+
+          <Outlet />
+        </div>
       </Box>
     </Box>
   );

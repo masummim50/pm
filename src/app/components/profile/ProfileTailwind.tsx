@@ -5,7 +5,7 @@ import TeamProjectOverview from "./TeamProjectOverviewTailwind";
 import useDocumentTitle from "../../../UseDocumentTitle";
 import { useEffect, useState } from "react";
 import { useGetLastTodosQuery, useGetTodosQuery } from "../../redux/features/todo/todo.api";
-import { useGetPersonalProjectsQuery } from "../../redux/features/project/project.api";
+import { useGetPersonalProjectsQuery, useGetTeamProjectsQuery } from "../../redux/features/project/project.api";
 import { formatDataArray } from "../../lib/dateFunctions";
 import { Sparkles } from "lucide-react";
 
@@ -16,6 +16,7 @@ const ProfileTailwind = () => {
     const { data, isLoading, isSuccess } = useGetLastTodosQuery(undefined);
     const { data: allTodosData, isLoading: isAllLoading } = useGetTodosQuery(undefined);
     const { data: allProjectsData, isLoading: isProjectsLoading } = useGetPersonalProjectsQuery(undefined);
+    const { data: teamProjectsData, isLoading: isTeamLoading } = useGetTeamProjectsQuery(undefined);
 
     const [dates, setDates] = useState<string[]>([]);
     const [values, setValues] = useState<number[]>([]);
@@ -69,7 +70,10 @@ const ProfileTailwind = () => {
                 showRandom={showRandom}
                 allProjects={allProjectsData?.data}
             />
-            <TeamProjectOverview />
+            <TeamProjectOverview
+                isLoading={isTeamLoading}
+                allTeamProjects={teamProjectsData?.data}
+            />
             <JournalOverview />
         </div>
     );

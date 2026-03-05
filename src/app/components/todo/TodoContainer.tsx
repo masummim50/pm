@@ -41,18 +41,16 @@ const TodoContainer = () => {
           No todo has been added yet.
         </Box>
       ) : (
-        isSuccess && 
-          
-        
+        isSuccess &&
+
+
         <DndProvider backend={HTML5Backend}>
           <Grid container spacing={2}>
             <PendingSection
               todos={todos?.data?.pending}
-              completedCount={todos?.data?.completed.length}
             />
             <CompleteSection
               todos={todos?.data?.completed}
-              pendingCount={todos?.data?.pending.length}
             />
           </Grid>
         </DndProvider>

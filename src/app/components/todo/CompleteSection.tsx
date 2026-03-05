@@ -1,41 +1,40 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Box, Grid, Tooltip } from "@mui/material";
 import { useDrop } from "react-dnd/dist/hooks";
-import Badge from "@mui/material/Badge";
 import { todoType } from "./todo.interface";
 import {
   useCompleteTodoMutation,
   useDeleteAllCompletedTodosMutation,
 } from "../../redux/features/todo/todo.api";
 import TodoCard from "./TodoCard";
-import Typography from "@mui/material/Typography";
-import { LoadingButton } from "@mui/lab";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { blueGrey, green } from "@mui/material/colors";
+import {
+  CheckCircle2,
+  Trash2,
+  Loader2,
+  Trophy,
+  ArrowDown
+} from "lucide-react";
 
 export type itemType = { id: string; status: boolean };
+
 const CompleteSection = ({
   todos,
-  pendingCount,
 }: {
   todos: todoType[];
-  pendingCount: number;
 }) => {
-  const [parent] = useAutoAnimate(/* optional config */);
+  const [parent] = useAutoAnimate();
   const [completeTodo] = useCompleteTodoMutation();
-  const [deleteAllTodo, { isLoading: deletingAll }] =
-    useDeleteAllCompletedTodosMutation();
-  const [_,drop] = useDrop(() => ({
+  const [deleteAllTodo, { isLoading: deletingAll }] = useDeleteAllCompletedTodosMutation();
+
+  const [_, drop] = useDrop(() => ({
     accept: "todo",
     drop: (item: itemType) => handleDrop(item),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
-  const handleDrop = (item: itemType) => {
 
+  const handleDrop = (item: itemType) => {
     if (!item.status) {
       completeTodo(item);
     }
@@ -45,73 +44,76 @@ const CompleteSection = ({
     deleteAllTodo(undefined);
   };
 
-  return (
-    <Grid item xs={6}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          background: green[400],
-          textAlign: "center",
-          marginBottom: "5px",
-          borderRadius: "5px",
-          color: "white",
-          padding: "10px 0",
-        }}
-      >
-        <Typography
-          style={{
-            flex: 1,
-          }}
-        >
-          Completed{" "}
-          <Badge
-            sx={{ marginLeft: 1, color: "white", background: "red" }}
-            badgeContent={todos?.filter((todo: todoType) => todo?.status).length}
-          />
-        </Typography>
-        <LoadingButton
-          sx={{
-            background: "red",
-            marginRight: "2px",
-            minWidth: "auto",
-            padding: "5px",
-            borderRadius: "50%",
-            "&:hover": { background: "darkgreen" },
-          }}
-          loading={deletingAll}
-          onClick={handleDeleteAll}
-        >
-          <Tooltip title="delete all">
-            <DeleteIcon
-              sx={{ fontSize: "20px", color: "white", borderRadius: "50%" }}
-            />
-          </Tooltip>
-        </LoadingButton>
-      </Box>
+  const completedCount = todos?.filter((todo: todoType) => todo?.status).length || 0;
 
-      <div ref={drop} style={{ minHeight: "400px", height: "100%" }}>
-        <div ref={parent}>
-          {todos?.length === 0 && pendingCount > 0 && (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "200px",
-                background: blueGrey[100],
-                borderRadius: 2,
-              }}
-            >
-              Drag a todo to this section
-            </Box>
+  return (
+    <div className="flex flex-col h-full min-h-[500px] w-1/2">
+      {/* Section Header */}
+      <div className="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-md px-5 py-4 rounded-2xl mb-6 shadow-sm relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2" />
+
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+            <Trophy className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-emerald-500/50 leading-none mb-1">Status</span>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Completed</h3>
+              <div className="px-2 py-0.5 bg-rose-500 text-white text-[10px] font-black rounded-lg shadow-lg shadow-rose-500/20 animate-pulse">
+                {completedCount}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          disabled={deletingAll || completedCount === 0}
+          onClick={handleDeleteAll}
+          className={`
+            group/btn p-2.5 rounded-xl transition-all duration-300 relative
+            ${deletingAll || completedCount === 0
+              ? 'text-neutral-700 cursor-not-allowed'
+              : 'text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10'}
+          `}
+          title="Clear all completed"
+        >
+          {deletingAll ? (
+            <Loader2 className="w-5 h-5 animate-spin text-rose-500" />
+          ) : (
+            <Trash2 className="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
           )}
+        </button>
+      </div>
+
+      {/* Drop Zone & Content */}
+      <div
+        ref={drop}
+        className="flex-1 flex flex-col rounded-[2.5rem] transition-colors relative"
+      >
+        <div ref={parent} className="space-y-3">
+          {completedCount === 0 && (
+            <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-white/5 rounded-[2.5rem] bg-neutral-900/20 group">
+              <div className="w-16 h-16 bg-neutral-950/50 rounded-3xl flex items-center justify-center mb-6 border border-white/5 group-hover:scale-110 transition-transform duration-500">
+                <CheckCircle2 className="w-8 h-8 text-neutral-800 group-hover:text-emerald-500/40 transition-colors" />
+              </div>
+              <h4 className="text-white font-bold tracking-tight mb-2">No missions accomplished</h4>
+              <p className="text-neutral-500 text-sm max-w-[200px] text-center mb-6 leading-relaxed">
+                Drag and drop your finished tasks here to clear your workspace.
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase text-emerald-500/40 tracking-widest bg-emerald-500/5 px-4 py-2 rounded-full border border-emerald-500/10">
+                <ArrowDown className="w-3 h-3 animate-bounce" />
+                <span>Dropzone Active</span>
+              </div>
+            </div>
+          )}
+
           {todos?.map((todo: todoType, index) => (
             <TodoCard key={todo._id} time={100 * index} todo={todo} />
           ))}
         </div>
       </div>
-    </Grid>
+    </div>
   );
 };
 
