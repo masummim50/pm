@@ -97,7 +97,7 @@ const TaskCardTailwind = ({
     const progress = progressValue();
 
     return (
-        <div className={`
+        <div className={` hover:bg-blue-300/10 
       relative overflow-hidden rounded-[2.5rem] border backdrop-blur-xl p-6 mb-4 transition-all duration-500 group
       ${config.bg} ${config.border} ${config.glow} hover:border-white/10
     `}>
@@ -206,12 +206,14 @@ const TaskCardTailwind = ({
                 {/* Meta Section: Assigned To & Time Spent */}
                 <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/5">
                     <div className="flex items-center gap-4">
-                        {type === "team" && !task.assignedTo && projectUser === user.id && (
+
+                        {type === "team" && !task.assignedTo && projectUser === user.id && task.subtasks.length === 0 && (
                             <AssignTaskModal
                                 projectId={projectId}
                                 taskid={task._id}
                                 taskIndex={taskIndex}
                                 type="task"
+                                setExpanded={setExpanded}
                             />
                         )}
 
@@ -233,7 +235,7 @@ const TaskCardTailwind = ({
                     </div>
 
                     {/* Subtask Trigger Button */}
-                    {!task.assignedTo && (
+                    {(!task.assignedTo && task.status === 'ideal') && (
                         <button
                             onClick={() => setExpanded(!expanded)}
                             className={`

@@ -58,7 +58,7 @@ const SubTaskCardTailwind = ({
 }) => {
     const user = useSelector((state: RootState) => state.user);
     const { pathname } = useLocation();
-    const projectId = pathname.split("/")[2];
+    const projectId = pathname.split("/")[3];
 
     const [deleteSubTask] = useDeleteSubTaskByIdMutation();
     const [editSubTask] = useEditSubTaskByIdMutation();
@@ -71,6 +71,7 @@ const SubTaskCardTailwind = ({
     const editField = useRef<HTMLInputElement>(null);
 
     const handleDelete = () => {
+        console.log("handledelete clicked");
         deleteSubTask({
             projectId,
             subtaskId: subtask._id,

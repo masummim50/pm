@@ -10,7 +10,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ProjectTasks from "./ProjectTasks";
 
 import { useGetPersonalProjectByIdQuery } from "../../redux/features/project/project.api";
-import AddMember from "./AddMember";
+import AddMember from "./AddMemberTailwind";
 import ProjectDetailsLoading from "../loadingSkeletons/ProjectDetailsLoading";
 
 const ProjectDetails = () => {

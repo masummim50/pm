@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { taskType } from "./project.interface";
 import { Button } from "@mui/material";
 import { blueGrey, green } from "@mui/material/colors";
@@ -98,7 +98,7 @@ const TaskSortButtons = ({ type }: { type: string }) => {
     );
   }, [sortNumber]);
 
-  const handleSortButtonClick = (n:number)=> {
+  const handleSortButtonClick = (n: number) => {
     setSortNumber(n);
   }
 
@@ -119,6 +119,7 @@ const TaskSortButtons = ({ type }: { type: string }) => {
     <div style={{ marginTop: "5px" }}>
       {sortButtons.map((b) => (
         <Button
+          key={b.value}
           disabled={sortNumber === b.value}
           variant="text"
           size="small"
@@ -139,6 +140,7 @@ const TaskSortButtons = ({ type }: { type: string }) => {
       ))}
       {typeButtons.map((b) => (
         <Button
+          key={b.value}
           variant="text"
           size="small"
           sx={{

@@ -38,7 +38,7 @@ export type subtaskType = {
   status: 'ideal' | 'paused' | 'running' | 'complete';
   time: {
     startTime: number;
-    totalTime:number;
+    totalTime: number;
   };
   createdAt: string;
   updatedAt: string;
@@ -64,7 +64,7 @@ const SubTaskCard = ({
 }) => {
   const user = useSelector((state: RootState) => state.user);
   const { pathname } = useLocation();
-  const projectId = pathname.split("/")[2];
+  const projectId = pathname.split("/")[3];
 
   const [deleteSubTask] = useDeleteSubTaskByIdMutation();
   const [editSubTask] = useEditSubTaskByIdMutation();
@@ -228,22 +228,22 @@ const SubTaskCard = ({
       break;
   }
 
-  const chooseSubTaskBackground = ()=> {
-    
-      if(
-      subtask.status === 'complete'){
-        return green[100]
-      }
-      if(subtask.status === 'ideal'){
-        return blueGrey[100]
-      }
-      if(subtask.status === 'paused'){
-        return orange[100]
-      }
-      if(subtask.status === 'running'){
-        return blue[100]
-      }
-    
+  const chooseSubTaskBackground = () => {
+
+    if (
+      subtask.status === 'complete') {
+      return green[100]
+    }
+    if (subtask.status === 'ideal') {
+      return blueGrey[100]
+    }
+    if (subtask.status === 'paused') {
+      return orange[100]
+    }
+    if (subtask.status === 'running') {
+      return blue[100]
+    }
+
   }
 
   return (
@@ -258,22 +258,22 @@ const SubTaskCard = ({
       >
         <Box sx={{ flexGrow: 1 }}>
           {edit ? (
-              <TextField
-                autoFocus
-                size="small"
-                fullWidth
-                value={taskTitle}
-                onKeyDown={(e) => handleEditFieldPress(e)}
-                onChange={(e) => setTaskTitle(e.target.value)}
-                inputRef={editField}
-                variant="filled"
-                label="editing"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start"></InputAdornment>
-                  ),
-                }}
-              />
+            <TextField
+              autoFocus
+              size="small"
+              fullWidth
+              value={taskTitle}
+              onKeyDown={(e) => handleEditFieldPress(e)}
+              onChange={(e) => setTaskTitle(e.target.value)}
+              inputRef={editField}
+              variant="filled"
+              label="editing"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+            />
           ) : (
             <Typography sx={{ paddingLeft: "5px" }}>
               {subtask.title}

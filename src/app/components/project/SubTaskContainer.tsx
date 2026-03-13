@@ -30,7 +30,7 @@ const SubTaskContainer = ({
   const filter = useSelector((state: RootState) => state.filter.filter);
   const taskType = useSelector((state: RootState) => state.filter.taskType);
   const { pathname } = useLocation();
-  const projectId = pathname.split("/")[2];
+  const projectId = pathname.split("/")[3];
   const [createSubTask, { isLoading: createSubtaskLoading }] = useCreateSubTaskMutation();
   const [subTask, setSubTask] = useState("");
 

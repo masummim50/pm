@@ -30,6 +30,7 @@ export const subTaskApi = apiSlice.injectEndpoints({
             "getPersonalProjectById",
             projectId,
             (draft) => {
+              console.log("draft after creating subtask: ", draft, " ", "projectid: ", projectId, " ", "taskid: ", taskId);
               const index = draft.data.tasks.findIndex(
                 (task: taskType) => task._id == taskId
               );
@@ -49,11 +50,13 @@ export const subTaskApi = apiSlice.injectEndpoints({
         { projectId, subtaskId, taskId },
         { dispatch, queryFulfilled }
       ) {
+        console.log("delete query started: ")
         const result = dispatch(
           projectApi.util.updateQueryData(
             "getPersonalProjectById",
             projectId,
             (draft) => {
+              console.log("draft inside delete: ", draft);
               const index = draft.data.tasks.findIndex(
                 (task: taskType) => task._id == taskId
               );
